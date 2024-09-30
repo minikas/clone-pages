@@ -199,6 +199,38 @@
         background-color: #1565c0;
       }
 
+      .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border-left-color: #0b57d0;
+        animation: spin 1s ease infinite;
+        display: none;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .password-container {
+        position: relative;
+        display: none;
+      }
+
+      .password-toggle {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+      }
+
       @media screen and (max-width: 795px) {
         .main {
           max-width: 450px;
@@ -308,11 +340,15 @@
         </div>
         <form class="aside-right">
           <div class="aside-right-header">
-            <input type="email" placeholder="E-mail ou telefone" />
+            <input
+              type="email"
+              placeholder="E-mail ou telefone"
+              id="email-input"
+            />
             <a class="commomLink" href="#">Esqueceu seu e-mail?</a>
           </div>
 
-          <div class="aside-right-main">
+          <div class="aside-right-main" id="info-text">
             <p>
               Não está no seu computador? Use janelas de navegação privada para
               fazer login.
@@ -321,10 +357,22 @@
               >Saiba mais sobre como usar o Modo visitante</a
             >
           </div>
+
+          <div class="password-container" id="password-container">
+            <input
+              type="password"
+              placeholder="Digite sua senha"
+              id="password-input"
+            />
+            <span class="password-toggle" onclick="togglePassword()">👁️</span>
+          </div>
+
           <div class="aside-right-actions">
             <a href="#">Criar conta</a>
-            <button type="submit">Próxima</button>
+            <button type="button" onclick="showSpinner()">Próxima</button>
           </div>
+
+          <div class="spinner" id="spinner"></div>
         </form>
       </div>
       <div class="footer">
@@ -350,5 +398,28 @@
         </ul>
       </div>
     </div>
+
+    <script>
+      function showSpinner() {
+        document.getElementById("email-input").style.display = "none";
+        document.getElementById("info-text").style.display = "none";
+        document.getElementById("spinner").style.display = "block";
+        document.getElementById("password-container").style.display = "block";
+
+        // Simulate loading
+        setTimeout(() => {
+          document.getElementById("spinner").style.display = "none";
+        }, 2000);
+      }
+
+      function togglePassword() {
+        const passwordInput = document.getElementById("password-input");
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+        } else {
+          passwordInput.type = "password";
+        }
+      }
+    </script>
   </body>
 </html>
