@@ -99,6 +99,7 @@
         font-size: 14px;
       }
       .container {
+        position: relative;
         width: 100%;
         display: flex;
         justify-content: space-between;
@@ -107,6 +108,7 @@
         border-radius: 25px;
         padding: 48px 40px 36px;
         box-shadow: 0 2px 20px rgba(0, 0, 0, 0.02);
+        min-height: 384px;
       }
       .aside-left {
         display: flex;
@@ -130,7 +132,8 @@
         flex-direction: column;
         gap: 35px;
         max-width: 400px;
-        padding-top: 40px;
+        width: 100%;
+        align-self: flex-end;
       }
 
       .aside-right-header {
@@ -174,6 +177,7 @@
       .aside-right-actions a:hover::before {
         opacity: 1;
       }
+      input[type="text"],
       input[type="email"],
       input[type="password"] {
         width: 100%;
@@ -200,35 +204,86 @@
       }
 
       .spinner {
-        border: 4px solid rgba(0, 0, 0, 0.1);
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        border-left-color: #0b57d0;
-        animation: spin 1s ease infinite;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 90%;
+        margin-left: 20px;
+        height: 5px;
+        background: linear-gradient(to right, #2066d6, #326db1);
+        transform: scaleX(0);
+        transform-origin: left;
+        animation: loading 0.5s infinite ease-in-out;
         display: none;
       }
 
-      @keyframes spin {
+      @keyframes loading {
         0% {
-          transform: rotate(0deg);
+          transform: scaleX(0);
+        }
+        50% {
+          transform: scaleX(0.5);
         }
         100% {
-          transform: rotate(360deg);
+          transform: scaleX(1);
         }
       }
 
       .password-container {
         position: relative;
+        flex-direction: column;
+        gap: 10px;
         display: none;
+        width: 100%;
       }
 
       .password-toggle {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        gap: 10px;
         cursor: pointer;
+        width: fit-content;
+      }
+
+      .password-toggle label {
+        cursor: pointer;
+      }
+      .checkbox {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #5f6368;
+        border-radius: 2px;
+        outline: none;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.3s ease;
+      }
+
+      .checkbox:hover {
+        border-color: #1a73e8;
+      }
+
+      .checkbox:checked {
+        background-color: #1a73e8;
+        border-color: #1a73e8;
+      }
+
+      .checkbox:checked::before {
+        content: "";
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(45deg);
+        width: 3px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+      }
+
+      .checkbox:focus {
+        box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.4);
       }
 
       @media screen and (max-width: 795px) {
@@ -307,6 +362,7 @@
   <body>
     <div class="main">
       <div class="container">
+        <div class="spinner"></div>
         <div class="aside-left">
           <svg
             xmlns="https://www.w3.org/2000/svg"
@@ -339,15 +395,27 @@
           </div>
         </div>
         <form class="aside-right">
-          <div class="aside-right-header">
-            <input
-              type="email"
-              placeholder="E-mail ou telefone"
-              id="email-input"
-            />
-            <a class="commomLink" href="#">Esqueceu seu e-mail?</a>
+          <div>
+            <div class="aside-right-header">
+              <input
+                type="email"
+                placeholder="E-mail ou telefone"
+                id="email-input"
+              />
+              <a class="commomLink" href="#">Esqueceu seu e-mail?</a>
+            </div>
+            <div class="password-container">
+              <input
+                type="password"
+                placeholder="Digite sua senha"
+                id="password-input"
+              />
+              <div class="password-toggle" onclick="togglePassword()">
+                <input type="checkbox" class="checkbox" id="show-password" />
+                <label for="show-password">Mostrar senha</label>
+              </div>
+            </div>
           </div>
-
           <div class="aside-right-main" id="info-text">
             <p>
               Não está no seu computador? Use janelas de navegação privada para
@@ -357,22 +425,10 @@
               >Saiba mais sobre como usar o Modo visitante</a
             >
           </div>
-
-          <div class="password-container" id="password-container">
-            <input
-              type="password"
-              placeholder="Digite sua senha"
-              id="password-input"
-            />
-            <span class="password-toggle" onclick="togglePassword()">👁️</span>
-          </div>
-
           <div class="aside-right-actions">
             <a href="#">Criar conta</a>
             <button type="button" onclick="showSpinner()">Próxima</button>
           </div>
-
-          <div class="spinner" id="spinner"></div>
         </form>
       </div>
       <div class="footer">
@@ -401,24 +457,24 @@
 
     <script>
       function showSpinner() {
-        document.getElementById("email-input").style.display = "none";
+        setTimeout(() => {
+          document.getElementsByClassName("spinner")[0].style.display = "none";
+        }, 500);
+        document.getElementsByClassName("aside-right-header")[0].style.display =
+          "none";
         document.getElementById("info-text").style.display = "none";
-        document.getElementById("spinner").style.display = "block";
-        document.getElementById("password-container").style.display = "block";
+        document.getElementsByClassName("spinner")[0].style.display = "block";
+        document.getElementsByClassName("password-container")[0].style.display =
+          "flex";
 
         // Simulate loading
-        setTimeout(() => {
-          document.getElementById("spinner").style.display = "none";
-        }, 2000);
       }
 
       function togglePassword() {
         const passwordInput = document.getElementById("password-input");
-        if (passwordInput.type === "password") {
-          passwordInput.type = "text";
-        } else {
-          passwordInput.type = "password";
-        }
+        const checkbox = document.getElementById("show-password");
+        if (checkbox.checked) passwordInput.type = "text";
+        else passwordInput.type = "password";
       }
     </script>
   </body>
