@@ -2,7 +2,7 @@
 
 This project aims to recreate a pixel-perfect clone of the Google Sign page for educational purposes. The implementation is designed to be lightweight and compatible with ESP32 devices.
 
-![Google Sign Page Clone Screenshot](preview.png)
+![Google Sign Page Clone Screenshot](preview.jpg)
 
 ## Repository Overview
 
