@@ -8,7 +8,7 @@ This project aims to recreate a pixel-perfect clone of the Google Sign page for 
 
 The "clone-pages" repository contains multiple clones of popular web pages, including (but not limited to):
 
-- Google Sign Page (current project)
+- Google Sign Page
 - Facebook (coming soon)
 - Twitter (coming soon)
 - Apple (coming soon)
