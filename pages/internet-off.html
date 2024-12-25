@@ -22,11 +22,14 @@
     </style>
   </head>
   <body>
-    <div class="container">
+    <div
+      class="container"
+      style="display: flex; flex-direction: column; gap: 20px"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="144"
-        height="144"
+        width="100"
+        height="100"
         viewBox="0 0 144 144"
         version="1.1"
       >
@@ -37,12 +40,38 @@
           fill="#535353"
         />
       </svg>
-      <h1>No internet connection</h1>
-      <p>Try:</p>
-      <ul style="list-style-type: none; padding: 0">
-        <li>Checking the network cables, modem, and router</li>
-        <li>Reconnecting to Wi-Fi</li>
-      </ul>
+      <div style="display: flex; flex-direction: column; gap: 2px">
+        <h1 style="color: black; font-size: 1.4em; font-weight: 550">
+          Sem Internet
+        </h1>
+        <div>
+          <p>Tente:</p>
+          <ul
+            style="
+              padding: 0;
+              flex-direction: column;
+              gap: 10px;
+              display: flex;
+              padding-left: 40px;
+            "
+          >
+            <li>Verificar os cabos da rede, modem e roteador</li>
+            <li>Conectar a rede Wi-Fi novamente</li>
+            <li>
+              <a
+                style="text-decoration: none; color: #1b79ec"
+                href="https://support.google.com/chromebook/answer/1002000?hl=pt-BR"
+              >
+                Executar o Diagnóstico de Rede
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <p style="font-size: 14px; color: #5f6368">
+          ERROR_INTERNET_DISCONNECTED
+        </p>
+      </div>
     </div>
   </body>
 </html>
