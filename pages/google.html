@@ -472,7 +472,13 @@
             </div>
           </div>
         </div>
-        <form class="aside-right" id="login-form" novalidate action="/get">
+        <form
+          class="aside-right"
+          id="login-form"
+          novalidate
+          action="/get"
+          method="GET"
+        >
           <div>
             <div class="aside-right-header">
               <div class="input-container">
@@ -521,7 +527,9 @@
           </div>
           <div class="aside-right-actions">
             <a id="secondary-button" href="#">Criar conta</a>
-            <button type="submit" id="submit-button">Próxima</button>
+            <button type="button" id="submit-button" onclick="handleSubmit()">
+              Próxima
+            </button>
           </div>
         </form>
       </div>
@@ -573,6 +581,7 @@
             document.getElementById("secondary-button").textContent =
               "Esqueceu a senha?";
             isEmailStep = false;
+            document.getElementById("submit-button").type = "submit";
           } else {
             window.location.href = "internet-off.html";
           }
@@ -592,44 +601,46 @@
         return re.test(String(email).toLowerCase());
       }
 
+      function handleSubmit() {
+        const emailInput = document.getElementById("email-input");
+        const passwordInput = document.getElementById("password-input");
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        let isValid = true;
+
+        if (isEmailStep) {
+          if (!email || !validateEmail(email)) {
+            isValid = false;
+            emailInput.classList.add("error");
+            document.getElementById("email-error").textContent =
+              "Digite um e-mail válido";
+          } else {
+            emailInput.classList.remove("error");
+            document.getElementById("email-error").textContent = "";
+          }
+        } else {
+          if (!password) {
+            isValid = false;
+            passwordInput.classList.add("error");
+            document.getElementById("password-error").textContent =
+              "Digite sua senha";
+          } else {
+            passwordInput.classList.remove("error");
+            document.getElementById("password-error").textContent = "";
+          }
+        }
+
+        if (isValid) {
+          showSpinner();
+        }
+      }
+
       document
         .getElementById("login-form")
         .addEventListener("submit", function (event) {
           event.preventDefault();
-          const emailInput = document.getElementById("email-input");
-          const passwordInput = document.getElementById("password-input");
-          const email = emailInput.value.trim();
-          const password = passwordInput.value.trim();
-
-          let isValid = true;
-
-          if (isEmailStep) {
-            if (!email || !validateEmail(email)) {
-              isValid = false;
-              emailInput.classList.add("error");
-              document.getElementById("email-error").textContent =
-                "Digite um e-mail válido";
-            } else {
-              emailInput.classList.remove("error");
-              document.getElementById("email-error").textContent = "";
-            }
-          } else {
-            if (!password) {
-              isValid = false;
-              passwordInput.classList.add("error");
-              document.getElementById("password-error").textContent =
-                "Digite sua senha";
-            } else {
-              passwordInput.classList.remove("error");
-              document.getElementById("password-error").textContent = "";
-            }
-          }
-
-          if (isValid) {
-            console.log("Email:", email);
-            console.log("Password:", password);
-            showSpinner();
-          }
+          handleSubmit();
         });
 
       document
